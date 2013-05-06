@@ -1,0 +1,7 @@
+\begin{abstract}
+
+Multipath transport protocols provide practical and theoretical advantages over traditional single path protocols, enabling better congestion balancing and higher throughput without violating TCP fairness conditions. Multipath TCP (MPTCP) is the highest profile ongoing effort to create a multipath transport protocol, but its efficiency and flexibility is hampered by the need to be entirely backwards compatible with a network designed for single path connections. What would a multipath transport protocol look like if it could be created without these restrictions?
+    
+Serval is an experimental network architecture designed to support service-centric networking. It supports seamless mobility across networks and interfaces, multipath communication, and a service-centered network abstraction by creating a Service Access Layer which sits on top of an unmodified Network Layer and below the Transport Layer. In this paper I draw on the ongoing research on MPTCP to design and implement a multipath transport protocol that takes advantage of the abstractions provided by Serval to offer improved efficiency, flexibility, and simplicity, while still playing fair with legacy TCP connections.
+
+\end{abstract}

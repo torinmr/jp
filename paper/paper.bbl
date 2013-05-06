@@ -1,0 +1,78 @@
+\begin{thebibliography}{10}
+
+\bibitem{rfc5681}
+{\sc Allman, M., Paxson, V., and Blanton, E.}
+\newblock {TCP} congestion control.
+\newblock RFC 5681 (Draft Standard), Sept. 2009.
+
+\bibitem{arye2012formally}
+{\sc Arye, M., Nordstrom, E., Kiefer, R., Rexford, J., and Freedman, M.~J.}
+\newblock A formally-verified migration protocol for mobile, multi-homed hosts.
+\newblock In {\em Network Protocols (ICNP), 2012 20th IEEE International
+  Conference on\/} (2012), IEEE, pp.~1--12.
+
+\bibitem{rfc6182}
+{\sc Ford, A., Raiciu, C., Handley, M., Barre, S., and Iyengar, J.}
+\newblock Architectural guidelines for {M}ultipath {TCP} development.
+\newblock RFC 6182 (Informational), Mar. 2011.
+
+\bibitem{ford2008breaking}
+{\sc Ford, B., and Iyengar, J.}
+\newblock Breaking up the transport logjam.
+\newblock In {\em ACM HotNets, October\/} (2008).
+
+\bibitem{nordstrom2012serval}
+{\sc Nordstrom, E., Shue, D., Gopalan, P., Kiefer, R., Arye, M., Ko, S.~Y.,
+  Rexford, J., and Freedman, M.~J.}
+\newblock Serval: An end-host stack for service-centric networking.
+\newblock {\em Proc. 9th USENIX NSDI\/} (2012).
+
+\bibitem{podmayersky2011incremental}
+{\sc Podmayersky, B.}
+\newblock An incremental deployment strategy for {S}erval.
+\newblock Tech. Rep. TR-903-11, Princeton University Department of Computer
+  Science, May 2011.
+
+\bibitem{raiciu2011coupled}
+{\sc Raiciu, C., Handley, M., and Wischik, D.}
+\newblock Coupled congestion control for multipath transport protocols.
+\newblock {\em draft-ietf-mptcp-congestion-01 (work in progress)\/} (2011).
+
+\bibitem{rfc6356}
+{\sc Raiciu, C., Handley, M., and Wischik, D.}
+\newblock Coupled congestion control for multipath transport protocols.
+\newblock RFC 6356 (Experimental), Oct. 2011.
+
+\bibitem{raiciu2012hard}
+{\sc Raiciu, C., Paasch, C., Barre, S., Ford, A., Honda, M., Duchene, F.,
+  Bonaventure, O., and Handley, M.}
+\newblock How hard can it be? {D}esigning and implementing a deployable
+  {M}ultipath {TCP}.
+\newblock In {\em NSDI\/} (2012), vol.~12, pp.~29--29.
+
+\bibitem{raiciu2009practical}
+{\sc Raiciu, C., Wischik, D., and Handley, M.}
+\newblock Practical congestion control for multipath transport protocols.
+\newblock {\em University College London, London/United Kingdom, Tech. Rep\/}
+  (2009).
+
+\bibitem{wischik2008resource}
+{\sc Wischik, D., Handley, M., and Braun, M.~B.}
+\newblock The resource pooling principle.
+\newblock {\em ACM SIGCOMM Computer Communication Review 38}, 5 (2008), 47--52.
+
+\bibitem{wischik2009control}
+{\sc Wischik, D., Handley, M., and Raiciu, C.}
+\newblock Control of {M}ultipath {TCP} and optimization of multipath routing in
+  the {I}nternet.
+\newblock In {\em Network Control and Optimization}. Springer, 2009,
+  pp.~204--218.
+
+\bibitem{wischik2011design}
+{\sc Wischik, D., Raiciu, C., Greenhalgh, A., and Handley, M.}
+\newblock Design, implementation and evaluation of congestion control for
+  {M}ultipath {TCP}.
+\newblock In {\em Proceedings of the 8th USENIX conference on Networked systems
+  design and implementation\/} (2011), USENIX Association, pp.~8--8.
+
+\end{thebibliography}

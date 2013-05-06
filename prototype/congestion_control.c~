@@ -1,0 +1,37 @@
+#include "fake_headers.h"
+#include "congestion_control.h"
+
+/* This file implements the Opportunistic Linked-Increases Algorithm
+ * (OLIA) as specified in internet draft:
+ *     <Opportunistic Linked-Increases Algorithm for MPTCP>
+ *           draft-khalili-mptcp-congestion-control-00
+ *
+ * This could be substituted for the Linked-Increases Algorithm (LIA)
+ * specified in RFC 6356, or any other congestion control algorithm,
+ * the choice of congestion control algorithm is not an integral part
+ * of my design.
+ */
+
+
+
+int congestion_ack(struct fake_sock *sk, int num_bytes)
+{
+  sk->unacked_bytes -= num_bytes;
+ /* TODO - put stuff here */
+
+  return 0;
+}
+
+int congestion_loss(struct fake_sock *sk, int type)
+{
+  /* TODO - put stuff here */
+
+  return 0;
+}
+
+int congestion_bytes_available(struct fake_sock *sk)
+{
+  int diff = sk->cwind - sk->unacked_bytes;
+  if (diff < 0) diff = 0;
+  return diff;
+}

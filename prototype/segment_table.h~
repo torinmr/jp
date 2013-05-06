@@ -1,0 +1,20 @@
+#ifndef SEGMENT_TABLE
+#define SEGMENT_TABLE
+
+#include "fake_headers.h"
+
+struct table_entry {
+  fake_sock *flow;
+  int first;
+  int last;
+  int dup_acks;
+  int timeout;
+  table_entry *next;
+};
+
+int segment_table_register_bytes(struct fake_sock *conn_sk,
+                                 struct fake_sock *flow_sk,
+                                 int first, int last);
+int segment_table_update(struct fake_sock *sk, sack_segment *sack);
+
+#endif

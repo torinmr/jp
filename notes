@@ -1,0 +1,75 @@
+(1) divides the functionality of TCP into five parts.
+
+  "* Connection setup handshake and state machine.
+   * Reliable transmission & acknowledgement of data.
+   * Congestion control
+   * Flow control.
+   * Connection teardown handshake and state machine."
+
+Implementing multipath for Serval requires finding suitable algorithms and protocols for each of these parts.
+
+CONNECTION SETUP AND TEARDOWN
+In the Serval stack, the first and last areas are handled by the SAL. The most current description of the protocol I am aware of is in (2), where it is called ECCP. During the summer Erik, Matvey, and I discussed some changes to the protocol to deal with a few subtle issues related to NATs, etc. This summer I was able to complete the implementation of this part of the project. 
+
+FUNDAMENTAL DESIGN QUESTION!!!!!!!
+To what extent should we be constrained by the "backwards compatability" concerns that motivated the design decisions for MPTCP? There are two extremes. The first is the "break everything" approach, where we make no efforts towards compatability whatsoever. This allows for simpler and more efficient implementation (i.e. we could just stripe data across paths, instead of doing the whole "data seq/flow seq" thing). The justification for this is that Serval already breaks compatability, so there's no harm in breaking it further. This is not quite correct, for a few reasons. Serval can break things because it expects to be deployed either (a) on private backend networks (possible), (b) through a translator (likely), or (c) as a widespread replacement for the current network stack (less likely). The "break everything" approach works in case a, but it is problematic in case b (should the translator translate the multipath to single path?), and in case c it makes deployment even more onerous (middleboxes don't just need to learn to recognize SAL headers, they also need to totally rework how they handle transport protocols). This line of argument leads to the second extreme, the "MPTCP in Serval clothing" approach. This would bring all of the complexity and compatability of MPTCP into our multipath protocol, basically just porting the protocol to Serval in the same way that TCP was ported.
+
+Despite the arguments I gave above, I am inclined to the "break everything" approach. This transport protocol is not a core part of Serval, but rather a research project with the goal of testing and better understanding multipath in Serval. Porting MPTCP to Serval would be laborious and, I suspect, rather unilluminating. Taking many of the ideas of MPTCP and using them to create a simpler, more elegant, and hopefully more efficient protocol which takes advantages of Serval's capabilities would be much more interesting and fruitful as a research project, I believe.
+END FUNDAMENTAL DESIGN QUESTION
+
+Assuming "break everything" approach:
+
+CONGESTION CONTROL: 
+(3), (4), (5), and (8) describe slight variations on and developments of a multipath congestion control algorithm. The algorithm is designed to meet three criteria: (as stated in (4))
+1. Improve throughput. The protocol should perform at least as well as single-path TCP would on the best path available. 
+2. Do no harm. The protocol should not use more resources on any single path than single-path TCP would.
+3. Balance congestion. The protocol should move traffic to less congested paths, while respecting goals 1 and 2.
+I believe this algorithm can be used unmodified. The RFC (8) provides detailed information on how to implement the algorithm efficiently.
+
+FLOW CONTROL:
+(1) shows that flow control must be performed at the connection level, belying the name. Essentially, if flow control is performed per flow, a variety of deadlock scenarios can occur, so we need to have a general receive window shared by all flows. This is done in MPTCP by having flow control based around the data sequence number, not the flow sequence number. If we are trying to get by with only as single sequence number space, we will need to figure out a different method of doing this.
+
+RELIABLE TRANSMISSION:
+
+
+TODO: Review changes to ECCP we discussed this summer, finalize any remaining points and document the final protocol.
+
+TODO: Right now there is an awkward "double handshake", where the TCP handshake happens on top of and at the same time as the SAL handshake. Erik said this is to make porting existing implementations of TCP easier, but it seems awkward and unnecessary. Can we fix this, or would it break the non-multipath version of Serval?
+
+TODO: Figure out how to do flow control with as single sequence number space.   
+
+
+Ideas from SNS presentation:
+Keeping track of which packets sent where shouldn't be difficult, just an array the size of the window mapping byte ranges to subflows.
+
+Alternatively, have each ACK say which subflow it's ACKing. Won't help us know which subflows have lost packets, though.
+
+Problem with predictive retransmission: does it just move buffering from the receiver to the sender?
+
+It will be much easier to measure number of ACKs and number of dropped packets if we say that ACKs should always (or almost always) be transmitted back on the same subflow. Under what circumstances can we send them on different subflows?
+
+Come up with more concrete justifications for "Smart connection, dumb subflow" principly: flexibility? simplicity? efficiency? specifics.
+
+
+
+
+interface to SAL:
+serval_sal_xmit_skb
+serval_tcp_af_ops
+
+serval_tcp_write_queue
+serval_tcp_rcv_msg (sk->sk_receive_queue)
+
+
+References:
+1. Raiciu et al. "How Hard Can It Be? Designing and Implementing a Deployable Multipath TCP"
+2. Arye, Matvey. "A Formally-Verified Migration Protocol For Mobile, Multi-Homed Hosts"
+3. Wischik et al. "Design, Implementation, and evaluation of congestion control for multipath TCP"
+4. Raiciu et al. "Practical Congestion Control for Multipath Transport Protocols"
+5. Wischik et al. "Control of multipath TCP and optimiziation of multipath routing in the Internet"
+6. Nordstom et al. "Serval: An End-Host Stack for Service-Centric Networking"
+7. Podmayersky, Brandon. "An Incremental Deployment Strategy for Serval"
+8. Raiciu et al. "Coupled Congestion Control for Multipath Transport Protocols" (RFC)
+
+
+

@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "fake_headers.h"
+#include "dispatcher.h"
+#include "congestion_control.h"
+#include "segment_table.h"
+
+/* For the moment, the scheduler works on a "best fit" policy,
+   choosing the interface that can accomodate the largest number
+   of packets.
+
+   Returns the number of bytes to send, puts the subflow to send
+   them on in "flow". */
+
+int queue_bytes(struct fake_sock *sk, int first, int last)
+{
+  struct byte_segment *bytes, *current;
+
+  bytes = malloc(sizeof(struct byte_segment));
+  if (bytes == NULL) {
+    printf("Out of memory!\n");
+    return -1;
+  }
+  bytes->first = first;
+  bytes->last = last;
+  
+  if (sk->cstate->queued_bytes == NULL) {
+    sk->cstate->queued_bytes = bytes;
+  } else {
+    current = sk->cstate->queued_bytes;
+    while (current->next != NULL) {
+      current = current->next;
+    }
+    current->next = bytes;
+  }
+  return 0;
+}
+
+int unqueue_bytes(struct fake_sock *sk)
+{
+  int num_bytes, first, last;
+  struct fake_sock *flow;
+  struct byte_segment *bytes;
+  
+  while (sk->cstate->queued_bytes != NULL) {
+    first = sk->cstate->queued_bytes->first;
+    last = sk->cstate->queued_bytes->last;
+    
+    while (first < last) {
+      num_bytes = schedule(sk, first, last, &flow);
+      if (num_bytes == 0) {
+        sk->cstate->queued_bytes->first = first;
+        return 0;
+      }
+      
+      if (segment_table_register_bytes(sk, flow, first, first + num_bytes) != 0) { return -1; }
+      if (dispatcher_put_to_network(flow, first, first + num_bytes) != 0) { return -1; }
+      flow->unacked_bytes += num_bytes;
+      
+      first += num_bytes;    
+    }
+  
+    bytes = sk->cstate->queued_bytes;
+    sk->cstate->queued_bytes = bytes->next;
+    free(bytes);
+  }
+  return 0;
+}
+
+int schedule(struct fake_sock *sk, int first, int last,
+             struct fake_sock **flow)
+{
+  struct fake_sock *current, *best_fit;
+  int current_available, max_available = 0;
+  int max_to_send = last - first;
+
+  if (max_to_send > MAX_SEGMENT_SIZE) {
+    max_to_send = MAX_SEGMENT_SIZE;
+  }
+
+  current = sk;
+  do {
+    current_available = congestion_bytes_available(current);
+    if (current_available > max_available) {
+      max_available = current_available;
+      best_fit = current;
+    }
+
+    current = current->next;
+  } while (current != sk);
+
+  *flow = best_fit;
+  if (max_available < max_to_send) { return max_available; }
+  else { return max_to_send; }
+}
+
+int dispatcher_send_bytes(struct fake_sock *sk, int first, int last)
+{
+  int num_bytes;
+  struct fake_sock *flow;
+
+  while (first < last) {
+    num_bytes = schedule(sk, first, last, &flow);
+    if (num_bytes == 0) {
+      printf("All congestion windows full, queueing packets to send on next ack.\n");
+      return queue_bytes(sk, first, last);
+    }
+    
+    if (segment_table_register_bytes(sk, flow, first, first + num_bytes) != 0) { return -1; }
+    if (dispatcher_put_to_network(flow, first, first + num_bytes) != 0) { return -1; }
+    flow->unacked_bytes += num_bytes;
+
+    first += num_bytes;    
+  }
+  return 0;
+}
+
+int dispatcher_put_to_network(struct fake_sock *sk, int first, int last)
+{
+  printf("Sending bytes [%d, %d) over interface %d\n", first, last, sk->iface);
+  return 0;
+}
+
+int dispatcher_receive_ack(struct fake_sock *sk, struct sack_segment *sack)
+{
+  int ret = segment_table_update(sk, sack);
+  if (ret != 0) { return ret; }
+  else { return unqueue_bytes(sk); }
+}

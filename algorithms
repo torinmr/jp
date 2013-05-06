@@ -1,0 +1,128 @@
+Flow control & Acknowledgements
+
+Information needed:
+
+-Congestion Control
+    C1 - (approximately) how many packets have been ACKed over each subflow?        
+    C2 - (exactly) how many packets have been lost over each subflow?
+    C3 - (approximately) how many packets are in flight over each subflow? 
+
+-Flow Control
+    F1 - (exactly) What is the highest numbered packet we can send (size of receive window)
+    F2 - (exactly) What is the lowest numbered packet still not acknowledged (start of receive window)
+
+-Acknowledgements
+    A1 - (exactly) which packets have been ACKed, and which have not?
+    A2 - (exactly) which packets need to be resent?
+                (redundant retransmit acceptable)
+
+Thoughts:
+Simply running TCP at the connection level and randomly striping data over subflows will take care of all F and A needs, but fails miserably at C needs. Fundamentally, the problem is attributing packet losses.
+
+Perhaps we could use SACKs, and somehow unify the SACK data with data recording which packets were sent over which interfaces, to figure out how many packets were 
+
+
+PROPOSAL:
+Assign chunks of packets to interfaces, and record these assignments to a table. The table keeps track of UNACKNOWLEDGE DATA. 
+
+When a SACK is received, we update the table according to this pseudocode:
+
+entry = table.first_entry
+foreach segment in SACK:
+        while (entry.first < segment.first):
+              entry = entry.next
+        while (entry.last <= segment.last):
+              next = entry.next
+              record_ack(entry.interface, entry.first, entry.last)
+              delete_entry(table, entry)
+              entry = next
+        record_ack(entry.interface, entry.first, segment.last)
+        if (entry.first == segment.last && SACK.interface = entry.interface):
+            entry.ACK_count++
+            if (entry.ACK_count >= 3):
+                retransmit(interface, SACK.segments)
+        entry.first = segment.last
+
+
+Note that since we only traverse the table once, this algorithm is linear in the number of entries in the table between the first and last bytes SACKed. Since any completely ACKed segments are removed from the table, this is essentially the number of segments containing partially acknowledged data, so this should be a small number.
+
+This lets us know exactly how many bytes have been ACKed on each interface. The record_ack function behaves essentially the same way a single TCP connection behaves in response to SACKs, figuring out how many bytes have been ACKed, which bytes to retransmit, and how many bytes have been lost.
+
+EXAMPLE:
+The application sends 2483 bytes to the network. The protocol assigns them alternately to the two available interfaces in 1000 byte chunks, after which the table looks like this:
+(like with 
+
+Interface     First unACKed byte    Last byte    ACK counter
+1             0                     1000         0
+2             1000                  2000         0
+1             2000                  2483         0
+
+After a little while, we get a SACK, acknowledging segments 0-1253 and 2000-2246. This means that 1 has finished its first segment and is into the second one, while 2 is just a quarter of the way through its first segment. This produces the following table:
+
+Interface     First unACKed byte    Last byte   Duplicate ACK counter
+2             1253                  2000        0
+1             2246                  2483        0
+
+Now, suppose both flows continue transmitting, but packet number 1260 over interface 2 gets dropped. Then the next SACK might acknowledge 0-1260, 1261-1340, 2000-2311. The table would now look like:
+
+Interface     First unACKed byte    Last byte   Duplicate ACK counter
+2             1260                  2000        0
+1             2311                  2483        0
+
+The next few SACKs, and the corresponding tables, might look like:
+
+SACK: 0-1260, 1261-1435, 2000-2372
+
+Interface     First unACKed byte    Last byte   Duplicate ACK counter
+2             1260                  2000        1
+1             2372                  2483        0
+
+SACK: 0-1260, 1261-1509, 2000-2395
+
+Interface     First unACKed byte    Last byte   Duplicate ACK counter
+2             1260                  2000        2
+1             2395                  2483        0
+
+SACK: 0-1260, 1261-1568, 2000-2460
+
+Interface     First unACKed byte    Last byte   Duplicate ACK counter
+2             1260                  2000        3
+1             2460                  2483        0
+
+At this point, we have registered a triple-duplicate ACK, so we retransmit data.
+
+CONGESTION CONTROL:
+Each interface sends every byte assigned to it as soon/fast as possible.
+For each interface, keep a counter of how many unACKed bytes allocated to the interface. Whenever a block is allocated to the interface, increment the counter, and whenever record_ack is called for this interface, decrement the counter. The counter can never be higher than the window size dictated by the congestion control algorithm.
+
+FLOW CONTROL:
+Identical to single-path TCP, but when a byte is "sent" it is really just assigned to a subflow.
+
+
+
+COMPLETE ALGORITHM:
+The sender has a send buffer, and the receiver a receive buffer. They function exactly like in TCP, just without congestion control, and when TCP would send a packet to the network layer, we instead call the "allocator", which allocates the data to the various interfaces. The receiver acts just like a TCP receiver, but it is required to send SACKs.
+
+The allocator functions as follows:
+Upon being handed a contiguous section of data to send, it breaks it up into segments (which can be of variable length), and assigns the segments to the interfaces. It can do this in whatever way it likes, subject to the constraint that for each interface, interface.unACKedbytes <= interface.cwindow. If interface.unACKedbytes => interface.cwindow for every interface, then we block until the next SACK is received.
+
+Assigning a segment to an interface consists of the following:
+1. Add an entry to the table, recording the interface and the start and end bytes of the segment.
+2. Increase interface.unACKedbytes by the number of bytes in the segment.
+3. Send the segment over the interface. (or at least enqueue it to be sent)
+
+When a SACK is received:
+1. Update the last_byte_acked in the send buffer according to the ACK field of the packet.
+2. Run the algorithm above to update the table, and retransmit if there was a triple-duplicate ack on any subflow.
+
+Record_ack(interface, first, last) {
+    interface.unACKedbytes -= last - first;
+    interface.cwindow += min (alpha * (last-first) * interface.MSS / total_cwindow,
+                              (last-first) * interface.MSS / interface.cwindow)    
+}
+
+(Details for how to compute alpha are given in RFC 6356.)
+
+
+Remaining questions:
+Retransmission - timeouts

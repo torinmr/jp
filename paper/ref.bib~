@@ -1,0 +1,122 @@
+@article{nordstrom2012serval,
+  title="Serval: An End-Host Stack for Service-Centric Networking",
+  author="Nordstrom, Erik and Shue, David and Gopalan, Prem and Kiefer, Robert and Arye, Matvey and Ko, Steven Y and Rexford, Jennifer and Freedman, Michael J",
+  journal="Proc. 9th USENIX NSDI",
+  year="2012",
+}
+
+@inproceedings{raiciu2012hard,
+  title="How Hard Can It Be? {D}esigning and Implementing a Deployable {M}ultipath {TCP}",
+  author="Raiciu, Costin and Paasch, Christoph and Barre, Sebastien and Ford, Alan and Honda, Michio and Duchene, Fabien and Bonaventure, Olivier and Handley, Mark",
+  booktitle="NSDI",
+  volume="12",
+  pages="29--29",
+  year="2012",
+}
+
+@inproceedings{arye2012formally,
+  title="A Formally-Verified Migration Protocol for Mobile, Multi-Homed Hosts",
+  author="Arye, Matvey and Nordstrom, Erik and Kiefer, Robert and Rexford, Jennifer and Freedman, Michael J",
+  booktitle="Network Protocols (ICNP), 2012 20th IEEE International Conference on",
+  pages="1--12",
+  year="2012",
+  organization="IEEE",
+}
+
+ @inproceedings{wischik2011design,
+  title="Design, Implementation and Evaluation of Congestion Control for {M}ultipath {TCP}",
+  author="Wischik, Damon and Raiciu, Costin and Greenhalgh, Adam and Handley, Mark",
+  booktitle="Proceedings of the 8th USENIX conference on Networked systems design and implementation",
+  pages="8--8",
+  year="2011",
+  organization="USENIX Association",
+}
+
+@article{raiciu2009practical,
+  title="Practical Congestion Control for Multipath Transport Protocols",
+  author="Raiciu, Costin and Wischik, Damon and Handley, Mark",
+  journal="University College London, London/United Kingdom, Tech. Rep",
+  year="2009",
+}
+
+@article{raiciu2011coupled,
+  title="Coupled Congestion Control for Multipath Transport Protocols",
+  author="Raiciu, C and Handley, M and Wischik, D",
+  journal="draft-ietf-mptcp-congestion-01 (work in progress)",
+  year="2011",
+}
+
+@article{wischik2008resource,
+  title="The Resource Pooling Principle",
+  author="Wischik, Damon and Handley, Mark and Braun, Marcelo Bagnulo",
+  journal="ACM SIGCOMM Computer Communication Review",
+  volume="38",
+  number="5",
+  pages="47--52",
+  year="2008",
+  publisher="ACM",
+}
+
+@incollection{wischik2009control,
+  title="Control of {M}ultipath {TCP} and Optimization of Multipath Routing in the {I}nternet",
+  author="Wischik, Damon and Handley, Mark and Raiciu, Costin",
+  booktitle="Network Control and Optimization",
+  pages="204--218",
+  year="2009",
+  publisher="Springer",
+}
+
+@inproceedings{ford2008breaking,
+  title="Breaking Up the Transport Logjam",
+  author="Ford, Bryan and Iyengar, Janardhan",
+  booktitle="ACM HotNets, October",
+  year="2008",
+}
+
+@techreport{podmayersky2011incremental,
+  title="An Incremental Deployment Strategy for {S}erval",
+  author="Podmayersky, Brandon",
+  year="2011",
+  institution="Princeton University Department of Computer Science",
+  number="TR-903-11",
+  month="May",
+}
+
+@misc{rfc5681,                                                                  
+  author="M. Allman and V. Paxson and E. Blanton",                              
+  title="TCP Congestion Control",                                             
+  series="Request for Comments",                                                
+  number="5681",                                                                
+  howpublished="RFC 5681 (Draft Standard)",                                     
+  publisher="IETF",                                                             
+  organization="Internet Engineering Task Force",                               
+  year=2009,                                                                    
+  month=sep,                                                                    
+    url="http://www.ietf.org/rfc/rfc5681.txt",                                  
+}                     
+
+@misc{rfc6182,
+  author="A. Ford and C. Raiciu and M. Handley and S. Barre and J. Iyengar",
+  title="Architectural Guidelines for Multipath TCP Development",
+  series="Request for Comments",
+  number="6182",
+  howpublished="RFC 6182 (Informational)",
+  publisher="IETF",
+  organization="Internet Engineering Task Force",
+  year=2011,
+  month=mar,
+    url="http://www.ietf.org/rfc/rfc6182.txt",
+}
+
+@misc{rfc6356,
+  author="C. Raiciu and M. Handley and D. Wischik",
+  title="Coupled Congestion Control for Multipath Transport Protocols",
+  series="Request for Comments",
+  number="6356",
+  howpublished="RFC 6356 (Experimental)",
+  publisher="IETF",
+  organization="Internet Engineering Task Force",
+  year=2011,
+  month=oct,
+    url="http://www.ietf.org/rfc/rfc6356.txt",
+}   

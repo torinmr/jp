@@ -1,0 +1,14 @@
+#ifndef DISPATCHER
+#define DISPATCHER
+
+#include "fake_headers.h"
+
+#define MAX_SEGMENT_SIZE = 100;
+
+int schedule(struct fake_sock *sk, int first, int last,
+             struct fake_sock **flow);
+int dispatcher_send_bytes(struct fake_sock *sk, int first, int last);
+int dispatcher_put_to_network(struct fake_sock *sk, int first, int last);
+int dispatcher_receive_ack(struct fake_sock *sk, struct sack_segment *sack);
+
+#endif
