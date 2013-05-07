@@ -1,2 +1,96 @@
 \section{Design}
 \label{sec:design}
+
+The Transport Layer is responsible for a bewildering array of functionality. Raiciu breaks up the functionality of TCP as follows: \cite{raiciu2012hard}
+
+\begin{itemize}
+  \item Connection setup and state machine.
+  \item Reliable transmission \& acknowledgement of data.
+  \item Congestion control.
+  \item Flow control.
+  \item Connection teardown handshake and state machine.
+\end{itemize}
+
+In fact, some researchers have suggested breaking up the functionality of the Transport Layer into several layers \cite{ford2008breaking}. In effect, this is what Serval does: connection teardown and establishment are the responsibility of the SAL, leaving the Transport Layer to concern itself with reliable transmission and acknowledgements, congestion control, and flow control.
+
+\subsection{``Dumb Subflow, Smart Connection''}
+A fundamental question in designing a multipath transport protocol is how much complexity to place at the level of the individual subflow, and how much to place at the level of the connection as a whole. At one extreme, one could imagine a protocol that functions exactly like TCP, except instead of sending out data over a single subflow, it blindly stripes it across the available subflows. In essence, this protocol would be entirely connection-level, and would be completely oblivious to individual subflows. At another extreme, one could create a ``protocol'' that opens a TCP connection for each subflow, sends different blocks of data over each subflow, and then reassembles them at the other end. This protocol would be almost entirely subflow-level, with very little connection-level state. In fact, as we will see below, either extreme is insufficient: a subflow-oblivious protocol would perform very poorly in the presence of varying RTTs, while an entirely subflow-oriented protocol could not coordinate the congestion windows of different subflows.
+
+While either extreme is impractical, the question remains: is it better to have complex, largely independent subflows loosely linked together with a minimum of connection-level state, or to have simple, dumb subflows with most state maintained at the connection level? For MPTCP, the answer was dictated by the demands of backwards compatibility: since MPTCP subflows must look like legacy TCP subflows in order to pass by middleboxes that assume single-path TCP, the MPTCP developers had no choice but to maintain essentially all the state of a single-path TCP connection for every subflow. However, I believe that in the absence of this constraint, the best approach is to keep per-subflow complexity to a minimum.
+
+I call this the ``Dumb Subflow, Smart Connection'' principle. There are several justifications for this approach:
+
+\begin{itemize}
+  \item Following from the end-to-end principle, any work performed at the subflow level will have to be repeated or checked at the connection level. For example, if data is reordered and buffered for each subflow, the data will have to be reordered and buffered again at the connection level, since each subflow only receives a portion of the data. Similarly, if a subflow does not receive an ACK for data sent, it needs to check with the connection before retransmitting, since the ACK may have been received on a different subflow. Since the work will have to be redone or checked anyway, it makes more sense to just do the work once at the connection level.
+  \item Better decisions can be made at the connection level than can be made at the subflow level, since more information and more options are available. For example, if a subflow suddenly starts experience high rates of packet loss, the connection can respond by retransmitting lost packets over a different interface, alleviating congestion on the first subflow. 
+  \item This principle implies that data is not assigned to a particular subflow until the last possible moment, which allows maximum possible flexibility in the face of changing network conditions. For example, the connection could only assign data to a subflow when it knew the congestion window was large enough that the data could be immediately transmitted. This avoids the problem where data is stuck waiting in a subflow's send buffer while other subflows are ready to send.
+\end{itemize}
+
+In the following sections, I will show how this principle can be applied to develop mechanisms for flow control, congestion control, and reliable delivery.
+
+\subsection{Flow Control}
+This is the simplest mechanism to design. As demonstrated in \cite{raiciu2012hard}, flow control must be orchestrated at the connection level; if individual send and receive buffers are used for each subflow, then deadlock can arise when a when a subflow loses connectivity with outstanding data. Given this, the design is clear: use a single send buffer and a single receive buffer for the connection, with semantics identical to TCP. This is also the solution adopted by MPTCP.
+
+\subsection{Congestion Control}
+Congestion control is perhaps the most complicated aspect of a multipath transport protocol. Fortunately, this area has been the focus of most research on MPTCP, and the fruits of this research apply equally well to my design.
+
+\subsubsection{Policy}
+
+Wischik et al., who articulated the resource pooling principle (Section \ref{sec:pooling}), also identified one of the key challenges in multipath congestion control: they found that supposedly stable algorithms designed around fluid models of networks, such as those of Kelly et al. \cite{kelly2005stability}, exhibited extremely flappy behaviour in practice, quickly switching from using one subflow exclusively to using the other subflow exclusively \cite{wischik2009control}. Raiciu et al. expanded on this work to articulate three explicit goals for a multipath congestion control algorithm, which I repeat here: \cite{raiciu2009practical}
+
+\begin{itemize}
+  \item \textbf{Goal 1: Improve throughput.} A multipath subflow should perform at least as well as a single-path flow on the best available subflow.
+  \item \textbf{Goal 2: Do no harm.} A multipath subflow should not take up more capacity on any path than a single-path flow would.
+  \item \textbf{Goal 3: Balance congestion.} A multipath subflow should move as much traffic as possible off of its most congested paths.
+\end{itemize}
+
+Goal 1 ensures that a multipath connection is never a downgrade from a single-path connection. Goal 2 ensures that a multipath connection is fair to single-path TCP connections. Goal 3 is what provides the benefits of resource pooling: by reacting to congestion by moving data to other subflows, the connection achieves higher resource utilization and lower loss rates, as well as making the network less congested for other, non-multipath flows sharing network resources.
+
+At first blush, Goal 2 seems somewhat counterintuitive. If single-path TCP would get 1 GB/s of throughput over subflow 1, and 1 GB/s of throughput over subflow 2, it seems obvious that a multipath protocol should get 2 GB/s of throughput when using both. However, this is not desirable. In general, the Transport Layer cannot know to what extent two subflows overlap in their use of network resources. If subflows 1 and 2 overlapped at a point of congestion (perhaps the last-mile link to the server), a multipath connection that got 2 GB/s would be using up twice its fair share of the congested resource. Taken to its logical extreme, this approach would create a subflow ``arms race'', where users trying to maximize throughput would add more and more subflows to get a higher share of contested network resources, creating extra overhead for multipath users and leaving single-path TCP users with only a tiny sliver of resources left.
+
+Raiciu et al. goes on to propose an algorithm that satisfies these goals, while avoiding flappiness \cite{raiciu2009practical}. Their Linked Increases Algorithm (LIA) is similar to TCP's congestion avoidance algorithm: for each subflow, the congestion window is increased by a small amount with each ACK, and cut in half with each loss. The difference from TCP is that the amount of increase is inversely proportionate to the \emph{total} of all congestion windows in the connection, and proportional to a parameter $\alpha$ which is dynamically adjusted to satisfy Goals 1 and 2. The algorithm is further justified in \cite{wischik2011design}, and implementation details, including suitably efficicient methods for calculating $\alpha$, are outlined in RFC 6356 \cite{rfc6356}.
+
+Some researches have called into question the optimality of LIA, leading to the development of an alternative algorithm, the Opportunistic Linked Increases Algorithm (OLIA) \cite{khalili2012optimal}. Time will tell which algorithm gains acceptance, but at the moment the LIA algorithm is well studied and well specified, and several reference implementations exist, so I will be using LIA in my design. 
+
+\subsubsection{Mechanism}
+A congestion control algorithm specifies a congestion \emph{policy}, but a \emph{mechanism} is also required. In other words, LIA specifies a congestion window for each subflow, but the Transport Layer must guarantee that no more bytes enter the network than the congestion window allows. In TCP, the send buffer is used to enforce congestion control via the sliding window algorithm: the last byte that can be sent is dictated by the minimum of the send window and the congestion window. This approach obviously will not work with a multipath protocol, since a single send buffer is used for the connection, and there must be different congestion windows for each subflow. 
+
+MPTCP solves this problem by having a send buffer for each subflow, each with its own instantiation of the sliding window algorithm. In keeping with the ``Dumb Subflow, Smart Connection'' principle, I believe the best way to enforce congestion control is by a much simpler mechanism:
+
+\begin{itemize}
+  \item Use a single send buffer for the connection.
+  \item Maintain a variable \texttt{unacked\_bytes} for each subflow.
+  \item \texttt{unacked\_bytes} increases when bytes are sent over a subflow, and decreases when bytes sent over a subflow are ACKed.
+  \item Bytes are only sent over a subflow if doing so would not make \texttt{unacked\_bytes} larger than the congestion window.
+\end{itemize}
+
+This design has a number of good characteristics. Besides its simplicity, it is also very flexible: since bytes are not assigned to a subflow unless they can be sent immediately, the protocol can react quickly to changing network conditions. In particular, bytes can be promptly assigned to newly-created subflows, and subflows can be deleted quickly without the need to reassign bytes to a different subflow. Furthermore, if a single packet is lost but later packets are successfully ACKed (corresponding to fast retransmit in TCP), the congestion window will not be held up, since the congestion control mechanism is based on a count of bytes in flight, not on a sliding window. This achieves the same effect as TCP congestion window inflation during fast retransmit, but with less bookkeeping and without the vulnerability to bogus duplicate ACK attacks that characterizes TCP's solution (see RFC 5681 \cite{rfc5681}).
+
+\subsection{Reliable Delivery and Acknowledgements}
+
+It is easy to see that the multipath transport protocol I have been sketching must use selective acknowledgements (SACKs). While a normal ACK indicates the end of the first segment of contiguous data received (``I've got everything up to byte 15''), a SACK states precisely which bytes have been received (``I have bytes 0-15, 17-24, and 30'') The reason why SACKs are necessary is that in a multipath protocol there may be multiple packet losses or other network events going on at one time, and the single piece of information provided by an ACK may be insufficient for the protocol to recognize and respond to all of them. For example, suppose two subflows each lose a packet at the same time. Normal ACKs would communicate that the packet with the lower sequence number was lost (through a triple-duplicate ACK), but would provide no information about the other loss until the first packet had been retransmitted and ACKed. A SACK would provide more complete information, allowing the protocol to deduce that one packet was lost on each interface and react accordingly.
+
+In addition to generating SACKs, the protocol must also maintain enough state to properly handle retransmissions, timeouts, and congestion control for each subflow. In order to manage congestion control, whenever a packet is lost it must be possible to figure out which subflow it was originally sent out over, so that the appropriate congestion window can be shrunk. This is only possible if the sender keeps track of which bytes were sent over which subflow, and uses this information to figure out where packet losses originated.
+
+\subsubsection{The Segment Table}
+The segment table is the data structure used to perform this bookkeeping. Essentially, it is a linked list of unacked byte ranges (the segments), recording for each segment which subflow it was sent over, and a duplicate ack counter used for fast retransmission. The segments of the segment table do not necessarily correspond to a packet; in fact, for efficiency they should generally be larger than a single packet. It is maintained as follows:
+
+\begin{itemize}
+  \item Whenever data is sent over a subflow, a new segment is created recording that fact.
+  \item Whenever a SACK is received, it is ``merged'' with the segment table:
+  \begin{itemize}
+    \item If a segment table entry's byte range is subsumed by a byte range in the SACK, the entry is removed.
+    \item If the first part of a segment table entry's byte range is covered by a byte range in the SACK, the segment table entry is truncated so they no longer overlap.
+    \item If a byte range in the SACK begins within a segment table entry's byte range, and the SACK was received on the subflow the segment was sent out over, the duplicate ack counter is incremented.
+  \end{itemize}
+\end{itemize}
+
+This is mostly straightforward: the segment table contains only bytes that have not yet been acknowledged, meaning that it does not grow indefinitely over time. Once a byte is acknowledged, the table promptly forgets about it.
+
+The last item above deserves some additional explanation. Since bytes within a segment are sent sequentially over a single subflow, in the absence of losses and reordering each successive SACK received over a given subflow that mentions a byte range within a certain segment should advance the left edge of that segment. If an ACK is received that fails to do this, it signifies reordering or loss over that subflow, and so the duplicate ACK counter for that particular segment is incremented. When the counter reaches three, fast retransmit is triggered, resending the segment. Resending the segment is simply a form of opportunistic retransmission, ensuring quick recovery in the case of multiple packet losses.
+
+Notice that there is no requirement that retransmission occur on the same subflow: this an area of flexibility afforded to the protocol, allowing for smart optimizations. For example, if multiple losses are experienced in succession, retransmission could be done over another subflow, since the current subflow may be unreliable or dead.
+
+Finally, since each SACK contains information about the entire connection, there is no requirement that acknowledgements be sent over the same subflow the data was received on. However, acknowledgements sent over a different flow must be marked as such (by setting a bit in the header), as they cannot be used in duplicate ACK calculations. It is easy to see why: receiving a SACK on flow 1 that mentions a segment sent out over flow 1 is normally an indication that new data was received on flow 1, but this is not the case if the SACK is actually in response to data received on flow 2.
+
+Timeouts are also handled by the segment table: each segment is timestamped when it is created, and the timestamp is updated whenever new bytes are acknowledged in a segment. Periodically, the segment table is sweeped, and any segment with a timestamp older than the timeout period is retransmitted.

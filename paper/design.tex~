@@ -1,0 +1,51 @@
+\section{Design}
+\label{sec:design}
+
+The Transport Layer is responsible for a bewildering array of functionality. Raiciu breaks up the functionality of TCP as follows: \cite{raiciu2012hard}
+
+\begin{itemize}
+  \item Connection setup and state machine.
+  \item Reliable transmission \& acknowledgement of data.
+  \item Congestion control.
+  \item Flow control.
+  \item Connection teardown handshake and state machine.
+\end{itemize}
+
+In fact, some researchers have suggested breaking up the functionality of the Transport Layer into several layers \cite{ford2008breaking}. In effect, this is what Serval does: connection teardown and establishment are the responsibility of the SAL, leaving the Transport Layer to concern itself with reliable transmission and acknowledgements, congestion control, and flow control.
+
+\subsection{``Dumb Subflow, Smart Connection''}
+A fundamental question in designing a multipath transport protocol is how much complexity to place at the level of the individual subflow, and how much to place at the level of the connection as a whole. At one extreme, one could imagine a protocol that functions exactly like TCP, except instead of sending out data over a single flow, it blindly stripes it across the available subflows. In essence, this protocol would be entirely connection-level, and would be completely oblivious to individual flows. At another extreme, one could create a ``protocol'' that opens a TCP connection for each subflow, sends different blocks of data over each subflow, and then reassembles them at the other end. This protocol would be almost entirely subflow-level, with very little connection-level state. In fact, as we will see below, either extreme is insufficient: a subflow-oblivious protocol would perform very poorly in the presence of varying RTTs, while an entirely subflow-oriented protocol could not coordinate the congestion windows of different subflows.
+
+While either extreme is impractical, the question remains: is it better to have complex, largely independent subflows loosely linked together with a minimum of connection-level state, or to have simple, dumb subflows with most state maintained at the connection level? For MPTCP, the answer was dictated by the demands of backwards compatibility: since MPTCP subflows must look like legacy TCP flows in order to pass by middleboxes that assume single-path TCP, the MPTCP developers had no choice but to maintain essentially all the state of a single-path TCP connection for every subflow. However, I believe that in the absence of this constraint, the best approach is to keep per-subflow complexity to a minimum.
+
+I call this the ``Dumb Subflow, Smart Connection'' principle. There are several justifications for this approach:
+
+\begin{itemize}
+  \item Following from the end-to-end principle, any work performed at the subflow level will have to be repeated or checked at the connection level. For example, if data is reordered and buffered for each subflow, the data will have to be reordered and buffered again at the connection level, since each subflow only receives a portion of the data. Similarly, if a subflow does not receive an ACK for data sent, it needs to check with the connection before retransmitting, since the ACK may have been received on a different subflow. Since the work will have to be redone or checked anyway, it makes more sense to just do the work once at the connection level.
+  \item Better decisions can be made at the connection level than can be made at the subflow level, since more information and more options are available. For example, if a subflow suddenly starts experience high rates of packet loss, the connection can respond by retransmitting lost packets over a different interface, alleviating congestion on the first subflow. 
+  \item This principle implies that data is not assigned to a particular subflow until the last possible moment, which allows maximum possible flexibility in the face of changing network conditions. For example, the connection could only assign data to a subflow when it knew the congestion window was large enough that the data could be immediately transmitted. This avoids the problem where data is stuck waiting in a subflow's send buffer while other subflows are ready to send.
+\end{itemize}
+
+In the following sections, I will show how this principle can be applied to develop mechanisms for flow control, congestion control, and reliable delivery.
+
+\subsection{Flow Control}
+This is the simplest mechanism to design. As demonstrated in \cite{raiciu2012hard}, flow control must be orchestrated at the connection level; if individual send and receive buffers are used for each subflow, then deadlock can arise when a when a subflow loses connectivity with outstanding data. Given this, the design is clear: use a single send buffer and a single receive buffer for the connection, with semantics identical to TCP. This is also the solution adopted by MPTCP.
+
+\subsection{Congestion Control}
+Congestion control is by far the most complicated aspect of a multipath transport protocol. Fortunately, this area has been the focus of most research on MPTCP, and the fruits of this research apply equally well here. 
+
+Wischik et al., who articulated the resource pooling principle (Section \ref{sec:pooling}), also identified one of the key challenges in multipath congestion control: they found that supposedly stable algorithms designed around fluid models of networks, such as those of Kelley et al. , exhibited extremely flappy behaviour in practice, quickly switching from using one flow exclusively to using the other flow exclusively \cite{wischik2009control}. Raiciu et al. expanded on this work to articulate three explicit goals for a multipath congestion control algorithm, which I repeat here: \cite{raiciu2009practical}
+
+\begin{itemize}
+  \item \textbf{Goal 1: Improve throughput.} A multipath flow should perform at least as well as a single-path flow on the best available subflow.
+  \item \textbf{Goal 2: Do no harm.} A multipath flow should not take up more capacity on any path than a single-path flow would.
+  \item \textbf{Goal 3: Balance congestion.} A multipath flow should move as much traffic as possible off of its most congested paths.
+\end{itemize}
+
+Goal 1 ensures that a multipath connection is never a downgrade from a single-path connection. Goal 2 ensures that a multipath connection is fair to single-path TCP connections. Goal 3 is what provides the benefits of resource pooling: by reacting to congestion by moving data to other flows, the connection achieves higher resource utilization and lower loss rates, as well as making the network less congested for other, non-multipath flows sharing network resources.
+
+At first blush, Goal 2 seems somewhat counterintuitive. If single-path TCP would get 1 GB/s of throughput over flow 1, and 1 GB/s of throughput over flow 2, it seems obvious that a multipath protocol should get 2 GB/s of throughput when using both. However, this is not desirable. In general, the Transport Layer cannot know to what extent two flows overlap in their use of network resources. If flows 1 and 2 overlapped at a point of congestion (perhaps the last-mile link to the server), a multipath connection that got 2 GB/s would be using up twice its fair share of the congested resource. Taken to its logical extreme, this approach would create a flow ``arms race'', where users trying to maximize throughput would add more and more flows to get a higher share of contested network resources, creating extra overhead for multipath users and leaving single-path TCP users with only a tiny sliver of resources left.
+
+Raiciu et al. goes on to propose an algorithm that satisfies these goals, while avoiding flappiness \cite{raiciu2009practical}. Their Linked Increases Algorithm (LIA) is similar to TCP's congestion avoidance algorithm: for each subflow, the congestion window is increased by a small amount with each ACK, and cut in half with each loss. The difference from TCP is that the amount of increase is inversely proportionate to the \emph{total} of all congestion windows in the connection, and proportional to a parameter $\alpha$ which is dynamically adjusted to satisfy Goals 1 and 2. The algorithm is further justified in \cite{wischik2011design}, and implementation details, including suitably efficicient methods for calculating $\alpha$, are outlined in RFC 6356 \cite{rfc6356}.
+
+We have some related work in Section~\ref{sec:related}.

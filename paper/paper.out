@@ -1,7 +1,15 @@
 \BOOKMARK [1][]{section.1}{``Worse is Better'' and the Need for Multipath}{}% 1
-\BOOKMARK [1][]{section.2}{Multipath TCP}{}% 2
-\BOOKMARK [1][]{section.3}{Overview of Serval}{}% 3
-\BOOKMARK [1][]{section.4}{Design}{}% 4
-\BOOKMARK [1][]{section.5}{Evaluation}{}% 5
-\BOOKMARK [1][]{section.6}{Related Work}{}% 6
-\BOOKMARK [1][]{section.7}{Conclusion}{}% 7
+\BOOKMARK [2][]{subsection.1.1}{The Resource Pooling Principle}{section.1}% 2
+\BOOKMARK [1][]{section.2}{Multipath TCP}{}% 3
+\BOOKMARK [1][]{section.3}{Overview of Serval}{}% 4
+\BOOKMARK [1][]{section.4}{Design}{}% 5
+\BOOKMARK [2][]{subsection.4.1}{``Dumb Subflow, Smart Connection''}{section.4}% 6
+\BOOKMARK [2][]{subsection.4.2}{Flow Control}{section.4}% 7
+\BOOKMARK [2][]{subsection.4.3}{Congestion Control}{section.4}% 8
+\BOOKMARK [3][]{subsubsection.4.3.1}{Policy}{subsection.4.3}% 9
+\BOOKMARK [3][]{subsubsection.4.3.2}{Mechanism}{subsection.4.3}% 10
+\BOOKMARK [2][]{subsection.4.4}{Reliable Delivery and Acknowledgements}{section.4}% 11
+\BOOKMARK [3][]{subsubsection.4.4.1}{The Segment Table}{subsection.4.4}% 12
+\BOOKMARK [1][]{section.5}{Implementation}{}% 13
+\BOOKMARK [1][]{section.6}{Further Work}{}% 14
+\BOOKMARK [1][]{section.7}{Conclusion}{}% 15

@@ -11,11 +11,6 @@
 \newblock In {\em Network Protocols (ICNP), 2012 20th IEEE International
   Conference on\/} (2012), IEEE, pp.~1--12.
 
-\bibitem{rfc6182}
-{\sc Ford, A., Raiciu, C., Handley, M., Barre, S., and Iyengar, J.}
-\newblock Architectural guidelines for {M}ultipath {TCP} development.
-\newblock RFC 6182 (Informational), Mar. 2011.
-
 \bibitem{ford2008breaking}
 {\sc Ford, B., and Iyengar, J.}
 \newblock Breaking up the transport logjam.
@@ -23,31 +18,38 @@
 
 \bibitem{worseisbetter}
 {\sc Gabrel, R.}
-\newblock The rise of ``worse is better''.
+\newblock The rise of ``{W}orse is {B}etter''.
 \newblock \url{http://www.jwz.org/doc/worse-is-better.html}, 1989.
 \newblock Accessed: 2013-05-06.
+
+\bibitem{hofstadter1985godel}
+{\sc Hofstadter, D.~R.}
+\newblock {\em G{\"o}del, Escher, Bach}.
+\newblock Klett-Cotta Stuttgart, 1985.
 
 \bibitem{mptcpcharter}
 {\sc {IETF}}.
 \newblock {M}ultipath {TCP} working group charter.
 \newblock charter-ietf-mptcp-03, June 2012.
 
+\bibitem{kelly2005stability}
+{\sc Kelly, F., and Voice, T.}
+\newblock Stability of end-to-end algorithms for joint routing and rate
+  control.
+\newblock {\em ACM SIGCOMM Computer Communication Review 35}, 2 (2005), 5--12.
+
+\bibitem{khalili2012optimal}
+{\sc Khalili, R., Gast, N., Popovic, M., Upadhyay, U., and Le~Boudec, J.-Y.}
+\newblock Mptcp is not pareto-optimal: performance issues and a possible
+  solution.
+\newblock In {\em Proceedings of the 8th international conference on Emerging
+  networking experiments and technologies\/} (2012), ACM, pp.~1--12.
+
 \bibitem{nordstrom2012serval}
-{\sc Nordstrom, E., Shue, D., Gopalan, P., Kiefer, R., Arye, M., Ko, S.~Y.,
+{\sc Nordstr{\"o}m, E., Shue, D., Gopalan, P., Kiefer, R., Arye, M., Ko, S.~Y.,
   Rexford, J., and Freedman, M.~J.}
 \newblock Serval: An end-host stack for service-centric networking.
 \newblock {\em Proc. 9th USENIX NSDI\/} (2012).
-
-\bibitem{podmayersky2011incremental}
-{\sc Podmayersky, B.}
-\newblock An incremental deployment strategy for {S}erval.
-\newblock Tech. Rep. TR-903-11, Princeton University Department of Computer
-  Science, May 2011.
-
-\bibitem{raiciu2011coupled}
-{\sc Raiciu, C., Handley, M., and Wischik, D.}
-\newblock Coupled congestion control for multipath transport protocols.
-\newblock {\em draft-ietf-mptcp-congestion-01 (work in progress)\/} (2011).
 
 \bibitem{rfc6356}
 {\sc Raiciu, C., Handley, M., and Wischik, D.}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.3.4)  7 MAY 2013 00:22
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.3.4)  7 MAY 2013 15:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -534,73 +534,66 @@ map/pdftex/updmap/pdftex.map}
 Non-PDF special ignored!
 
 ])
-(/home/torinmr/Documents/Princeton/jp1/paper/mptcp.tex
-Underfull \hbox (badness 1033) in paragraph at lines 4--5
-\OT1/ptm/m/n/10 ef-fort to cre-ate a mul-ti-path trans-port pro-to-col that can
-
- []
-
-) (/home/torinmr/Documents/Princeton/jp1/paper/serval.tex [2]
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 15.
+(/home/torinmr/Documents/Princeton/jp1/paper/mptcp.tex)
+(/home/torinmr/Documents/Princeton/jp1/paper/serval.tex [2])
+(/home/torinmr/Documents/Princeton/jp1/paper/design.tex
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 7.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 15.
-)
-(/home/torinmr/Documents/Princeton/jp1/paper/design.tex)
-(/home/torinmr/Documents/Princeton/jp1/paper/eval.tex
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 7.
+ [3]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 5.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 37.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 5.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 51.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 5.
-)
-(/home/torinmr/Documents/Princeton/jp1/paper/related.tex)
-(/home/torinmr/Documents/Princeton/jp1/paper/concl.tex
-Underfull \hbox (badness 10000) in paragraph at lines 4--1
-
- []
-
-) (/home/torinmr/Documents/Princeton/jp1/paper/paper.bbl
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 27.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 51.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 62.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-)
+) [4])
+(/home/torinmr/Documents/Princeton/jp1/paper/implementation.tex [5])
+(/home/torinmr/Documents/Princeton/jp1/paper/further.tex)
+(/home/torinmr/Documents/Princeton/jp1/paper/concl.tex)
+(/home/torinmr/Documents/Princeton/jp1/paper/paper.bbl [6]
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 27.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 22.
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 228.
- [3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 228.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 229.
+ [7
+
+]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 229.
 
 (/home/torinmr/Documents/Princeton/jp1/paper/paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 228.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 228.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 229.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 229.
 Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: CBADCB9803875FA3EC05174027A3D38B;353.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 228.
+(rerunfilecheck)             Checksum: 948679D38EABDC5C38C82627FBF0422E;941.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 229.
  ) 
 Here is how much of TeX's memory you used:
- 8266 strings out of 495059
- 126676 string characters out of 3182031
- 224863 words of memory out of 3000000
- 11277 multiletter control sequences out of 15000+200000
- 37562 words of font info for 76 fonts, out of 3000000 for 9000
+ 8303 strings out of 495059
+ 127285 string characters out of 3182031
+ 226849 words of memory out of 3000000
+ 11300 multiletter control sequences out of 15000+200000
+ 39553 words of font info for 80 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 37i,10n,43p,1351b,343s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 37i,10n,43p,1348b,421s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times
-/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (3 pages, 82016 bytes).
+type1/urw/symbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/
+utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on paper.pdf (7 pages, 107036 bytes).
 PDF statistics:
- 123 PDF objects out of 1000 (max. 8388607)
- 111 compressed objects within 2 object streams
- 28 named destinations out of 1000 (max. 500000)
- 57 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 180 PDF objects out of 1000 (max. 8388607)
+ 163 compressed objects within 2 object streams
+ 39 named destinations out of 1000 (max. 500000)
+ 121 words of extra memory for PDF output out of 10000 (max. 10000000)
 

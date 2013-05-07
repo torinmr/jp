@@ -1,0 +1,10 @@
+\section{Implementation}
+\label{sec:implementation}
+
+I have made strides towards creating a working implementation of the design discussed above. There are several reasons for implementing experimental protocols like this one: to fix ideas, to uncover unforseen gaps in a design, and to gain a better understanding of how the design can be improved going forward.
+
+The Serval project already has a robust implementation, a ~30,000 line linux kernel module implementing the whole of the Serval network stack. In Summer 2012 I successfully implemented multipath support in the SAL, and this semester I worked to implement the multipath transport protocol described here on top of this foundation.
+
+I began by creating a prototype of the protocol ``in a vacuum'': an implementation of congestion control, acknowledgements, and the segment table, essentially performing all duties of the Transport Layer, simply not connected to the actual network stack. In this way I was able to refine and debug many aspects of my segment table implementation. Since then, I have been working on integrating this implementation into the Serval prototype. Unfortunately, I ran into serious integration issues working my code into the kernel, and so while I have made significant progress in my implementation, I have not yet been able to produce a working prototype. This is, of course, an instance of a well known principle of software engineering, Hofstadter's law: ``It always takes longer than you expect, even when you take into account Hofstadter's Law'' \cite{hofstadter1985godel}.
+
+Though my implementation efforts have not yet been successful, my design has benefited greatly from the insights afforded by these efforts, and I plan to continue to work on this project and deliver a working prototype in due time.

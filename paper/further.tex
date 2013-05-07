@@ -1,0 +1,4 @@
+\section{Further Work}
+\label{sec:further}
+
+Besides its simplicity, the main benefit of the design I describe here over MPTCP is the increased flexibility it provides the Transport Layer. Packets are not committed to a flow until the moment they are sent, meaning that the protocol can adapt to current conditions immediately, without worrying about remapping or reassigning packets, and acknowledgements and retransmitted packets can be sent over arbitrary flows. This begs the question: What does this flexibility buy us? What gains in efficiency or loss recovery can be made by novel policies made possible by my design? I hope once a working implementation is complete, experimental work can proceed to answer these and other questions.
