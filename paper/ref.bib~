@@ -1,3 +1,13 @@
+@misc{worseisbetter,
+  title="The Rise of ``Worse is Better''",
+  author="Gabrel, Richard",
+  year="1989",
+  howpublished={\url{http://www.jwz.org/doc/worse-is-better.html}},
+  note={Accessed: 2013-05-06}
+}
+
+
+
 @article{nordstrom2012serval,
   title="Serval: An End-Host Stack for Service-Centric Networking",
   author="Nordstrom, Erik and Shue, David and Gopalan, Prem and Kiefer, Robert and Arye, Matvey and Ko, Steven Y and Rexford, Jennifer and Freedman, Michael J",

@@ -198,7 +198,8 @@ This paper represents my own work in accordance with University regulations.}
 
 \input{abstract}
 \ifthenelse{\equal{\onlyAbstract}{no}}{%
-\input{intro}
+\input{multi}
+\input{serval}
 \input{design}
 \input{eval}
 \input{related}

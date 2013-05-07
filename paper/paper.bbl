@@ -27,6 +27,11 @@
 \newblock \url{http://www.jwz.org/doc/worse-is-better.html}, 1989.
 \newblock Accessed: 2013-05-06.
 
+\bibitem{mptcpcharter}
+{\sc {IETF}}.
+\newblock {M}ultipath {TCP} working group charter.
+\newblock charter-ietf-mptcp-03, June 2012.
+
 \bibitem{nordstrom2012serval}
 {\sc Nordstrom, E., Shue, D., Gopalan, P., Kiefer, R., Arye, M., Ko, S.~Y.,
   Rexford, J., and Freedman, M.~J.}
@@ -61,6 +66,12 @@
 \newblock Practical congestion control for multipath transport protocols.
 \newblock {\em University College London, London/United Kingdom, Tech. Rep\/}
   (2009).
+
+\bibitem{saltzer1984end}
+{\sc Saltzer, J.~H., Reed, D.~P., and Clark, D.~D.}
+\newblock End-to-end arguments in system design.
+\newblock {\em ACM Transactions on Computer Systems (TOCS) 2}, 4 (1984),
+  277--288.
 
 \bibitem{wischik2008resource}
 {\sc Wischik, D., Handley, M., and Braun, M.~B.}

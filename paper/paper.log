@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.3.4)  6 MAY 2013 20:07
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.3.4)  7 MAY 2013 00:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -527,14 +527,20 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1.
 )
-(/home/torinmr/Documents/Princeton/jp1/paper/multi.tex)
-(/home/torinmr/Documents/Princeton/jp1/paper/serval.tex [1{/var/lib/texmf/fonts
-/map/pdftex/updmap/pdftex.map}
+(/home/torinmr/Documents/Princeton/jp1/paper/multi.tex [1{/var/lib/texmf/fonts/
+map/pdftex/updmap/pdftex.map}
 
 
 Non-PDF special ignored!
 
-]
+])
+(/home/torinmr/Documents/Princeton/jp1/paper/mptcp.tex
+Underfull \hbox (badness 1033) in paragraph at lines 4--5
+\OT1/ptm/m/n/10 ef-fort to cre-ate a mul-ti-path trans-port pro-to-col that can
+
+ []
+
+) (/home/torinmr/Documents/Princeton/jp1/paper/serval.tex [2]
 LaTeX Font Info:    Try loading font information for OMS+ptm on input line 15.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsptm.fd
@@ -553,8 +559,12 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 5.
 )
 (/home/torinmr/Documents/Princeton/jp1/paper/related.tex)
-(/home/torinmr/Documents/Princeton/jp1/paper/concl.tex)
-(/home/torinmr/Documents/Princeton/jp1/paper/paper.bbl
+(/home/torinmr/Documents/Princeton/jp1/paper/concl.tex
+Underfull \hbox (badness 10000) in paragraph at lines 4--1
+
+ []
+
+) (/home/torinmr/Documents/Princeton/jp1/paper/paper.bbl
 LaTeX Font Info:    Try loading font information for OT1+pcr on input line 27.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
@@ -563,34 +573,34 @@ File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 27.
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 227.
- [2]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 227.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 228.
+ [3]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 228.
 
 (/home/torinmr/Documents/Princeton/jp1/paper/paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 227.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 227.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 228.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 228.
 Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: 05E33485416E6FD359D46DE6B2B84FB6;282.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 227.
+(rerunfilecheck)             Checksum: CBADCB9803875FA3EC05174027A3D38B;353.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 228.
  ) 
 Here is how much of TeX's memory you used:
- 8251 strings out of 495059
- 126366 string characters out of 3182031
- 223770 words of memory out of 3000000
- 11269 multiletter control sequences out of 15000+200000
+ 8266 strings out of 495059
+ 126676 string characters out of 3182031
+ 224863 words of memory out of 3000000
+ 11277 multiletter control sequences out of 15000+200000
  37562 words of font info for 76 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 37i,10n,43p,1147b,343s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 37i,10n,43p,1351b,343s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/
 type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times
 /utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (2 pages, 75427 bytes).
+Output written on paper.pdf (3 pages, 82016 bytes).
 PDF statistics:
- 100 PDF objects out of 1000 (max. 8388607)
- 90 compressed objects within 1 object stream
- 24 named destinations out of 1000 (max. 500000)
- 49 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 123 PDF objects out of 1000 (max. 8388607)
+ 111 compressed objects within 2 object streams
+ 28 named destinations out of 1000 (max. 500000)
+ 57 words of extra memory for PDF output out of 10000 (max. 10000000)
 

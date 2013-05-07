@@ -51,6 +51,7 @@
      "letterpaper"
      "abstract"
      "multi"
+     "mptcp"
      "serval"
      "design"
      "eval"
