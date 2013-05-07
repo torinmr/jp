@@ -21,6 +21,12 @@
 \newblock Breaking up the transport logjam.
 \newblock In {\em ACM HotNets, October\/} (2008).
 
+\bibitem{worseisbetter}
+{\sc Gabrel, R.}
+\newblock The rise of ``worse is better''.
+\newblock \url{http://www.jwz.org/doc/worse-is-better.html}, 1989.
+\newblock Accessed: 2013-05-06.
+
 \bibitem{nordstrom2012serval}
 {\sc Nordstrom, E., Shue, D., Gopalan, P., Kiefer, R., Arye, M., Ko, S.~Y.,
   Rexford, J., and Freedman, M.~J.}

@@ -1,14 +1,15 @@
 \section{Introduction}
 \label{sec:intro}
 
-\begin{itemize}
-  \item Intro
-    Hello this is some text
-  \item Outline
 
-    Here's some more
-  \item Would fit nicely
-    holwdy
+Serval is one attempt to design a network architecture more in line with the needs of today's Internet. The current network stack, in particular the TCP and IP protocols, was designed around a host-centric abstraction. Specifically, it was designed for an Internet where communication occured between single computers which do not move around and do not have more than one network interface. For example, IP routes packets based on their IP address, implicitly relying on the assumption that each party in communication is uniquely identified by a single IP address that does not change over time. Unfortunately, each component of this assumption fails in today's Internet: IP addresses do not uniquely a party, due to the paucity of (IPv4) addresses and the resulting prevalance of NATs; a single party often has more than one IP address, whether because it is a single device with multiple interfaces (i.e. a smartphone with 4G and WiFi), or because it is a large web service run on thousands of different machines (i.e. Google); and the IP address of one party can change over time, whether due to virtual machine migration or to physical mobility. A wide variety of technologies have been created to deal with these problems at the application layer: network address translators (NATs), load balancers,  are all examples.
+
+
+As described in \cite{nordstrom2012serval}, Serval
+
+
+
+\begin{itemize}
   \item Here
 \end{itemize}
 

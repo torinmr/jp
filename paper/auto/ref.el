@@ -1,6 +1,7 @@
 (TeX-add-style-hook "ref"
  (lambda ()
     (LaTeX-add-bibitems
+     "worseisbetter"
      "nordstrom2012serval"
      "raiciu2012hard"
      "arye2012formally"

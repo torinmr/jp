@@ -1,0 +1,18 @@
+\section{Overview of Serval}
+\label{sec:serval}
+
+The network stack, in particular the TCP and IP protocols, was designed around a host-centric abstraction, optimized for an Internet of immobile computers which use only a single network interface. This is a far cry from today's Internet, where computers are mobile, possess multiple heterogenous network interfaces, and wish to connect to web services which are split across thousands of computers around the world. 
+
+For example, IP routes packets based on their IP address, implicitly relying on the assumption that each party in communication is uniquely identified by a single IP address that does not change over time. Unfortunately, each component of this assumption fails in today's Internet: IP addresses do not uniquely a party, due to the paucity of (IPv4) addresses and the resulting prevalance of NATs; a single party often has more than one IP address, whether because it is a single device with multiple interfaces (i.e. a smartphone with 4G and WiFi), or because it is a large web service run on thousands of different machines (i.e. Google); and the IP address of one party can change over time, whether due to virtual machine migration or to physical mobility. A wide variety of methods are used to deal with these problems, ranging from sophisticated application layer technologies (i.e. NATS and load balancers) to awkward non-solutions (such as restarting the connection whenever a party to a new IP address).
+
+Serval is one attempt to design a network architecture more in line with the needs of today's Internet. As described in \cite{nordstrom2012serval}, Serval replaces TCP/IP's host-centric abstraction with a new service-centric abstraction. A connection is a link between two Service IDs, composed of one or more flows, each of which is a point-to-point link between two IP addresses. Instead of early-binding to an IP address using DNS, Serval-enabled hosts late-bind on Service IDs, which are mapped to the IP address of a target machine using anycast routing. Once a connection is established, either host can add additional flows or migrate existing flows without disrupting the ongoing connection, enabling multipath communication and seamless migration. All of this is made possible by the creation of a new Service Access Layer (SAL), sitting between the Network and Transport Layers. The SAL handles connection establishment and termination, flow creation, deletion, and migration, and 
+
+
+
+
+
+\begin{itemize}
+  \item Here
+\end{itemize}
+
+We have some related work in Section~\ref{sec:related}.

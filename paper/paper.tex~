@@ -161,11 +161,8 @@ bookmarksopen = {true}
 \end{textblock*}
 }
 
-%%%
-%%%  Sample ACM Copyright Block
-%%%
 \newfloat{acmcr}{b}{acmcr}
-\newcommand{\AcmCopyright}{%
+\newcommand{\HonorCode}{%
 \begin{acmcr}
 \parbox[b]{20pc}{%
 This paper represents my own work in accordance with University regulations.}
@@ -206,7 +203,7 @@ This paper represents my own work in accordance with University regulations.}
 \input{eval}
 \input{related}
 \input{concl}
-\AcmCopyright{}
+
 %\appendix
 %\input{appendix_sources}
 
@@ -224,7 +221,7 @@ This paper represents my own work in accordance with University regulations.}
 %\theendnotes % ENDNOTES
 }{% !onlyAbstract
 }
-
+\HonorCode{}
 
 \end{document}
 

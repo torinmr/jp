@@ -84,7 +84,7 @@
 
 @misc{rfc5681,                                                                  
   author="M. Allman and V. Paxson and E. Blanton",                              
-  title="TCP Congestion Control",                                             
+  title="{TCP} Congestion Control",                                             
   series="Request for Comments",                                                
   number="5681",                                                                
   howpublished="RFC 5681 (Draft Standard)",                                     
@@ -97,7 +97,7 @@
 
 @misc{rfc6182,
   author="A. Ford and C. Raiciu and M. Handley and S. Barre and J. Iyengar",
-  title="Architectural Guidelines for Multipath TCP Development",
+  title="Architectural Guidelines for {M}ultipath {TCP} Development",
   series="Request for Comments",
   number="6182",
   howpublished="RFC 6182 (Informational)",
